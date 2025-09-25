@@ -51,8 +51,22 @@ int main(int argc, char *argv[]){
         tmp->next = c;
         tmp = tmp->next;
     }
-    
+    //visualizzare l'intera rubrica
     if (strcmp(argv[1], "v") == 0){
+        printContacts(rubrica);
+    }
+    // se l'argomento è "c" allora crea un nuovo contatto e lo aggiunge in rubrica
+    if (strcmp(argv[1], "c") == 0){
+        contatto *tmp = rubrica;
+        while(tmp->next){
+            tmp = tmp->next;
+        }
+        contatto *tmp2 = (contatto*)malloc(sizeof(contatto));
+        scanf("%s", tmp2->nome);
+        scanf("%s", tmp2->cognome);
+        scanf("%d", &tmp2->cellulare);
+        tmp->next = tmp2;
+        tmp = tmp->next;
         printContacts(rubrica);
     }
     return 0;
