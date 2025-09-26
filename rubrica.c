@@ -24,6 +24,18 @@ void printContacts(contatto* lista){
     }
 }
 
+
+void delete(contatto *lista, char* nome, char* cognome){
+    while(lista->next->nome != nome && lista->next->cognome != cognome && lista != NULL){
+        lista = lista->next;
+    }
+    if (lista->next->nome == nome && lista->next->cognome == cognome){
+        contatto *tmp = lista->next;
+        lista->next = tmp->next;
+        free(tmp);
+    }
+}
+
 void save(contatto* lista, FILE* f){
     while(lista){
         fprintf(f, "%s\t%s\t%d\n", lista->nome, lista->cognome, lista->cellulare);
@@ -58,28 +70,40 @@ int main(int argc, char *argv[]){
         tmp->next = c;
         tmp = tmp->next;
     }
-    
-    //visualizzare l'intera rubrica
-    if (strcmp(argv[1], "v") == 0){
-        printContacts(rubrica);
-    }
-    // se l'argomento è "c" allora crea un nuovo contatto e lo aggiunge in rubrica
-    if (strcmp(argv[1], "c") == 0){
-        contatto *tmp = rubrica;
-        while(tmp->next){
+    char scelta = 'a';
+
+    while(scelta != 'q'){
+        scanf("%c", &scelta);
+        //visualizzare l'intera rubrica
+        if (scelta == 'v'){
+            printContacts(rubrica);
+        }
+        // se l'argomento è "c" allora crea un nuovo contatto e lo aggiunge in rubrica
+        if (scelta == 'c'){
+            contatto *tmp = rubrica;
+            while(tmp->next){
+                tmp = tmp->next;
+            }
+            contatto *tmp2 = (contatto*)malloc(sizeof(contatto));
+            scanf("%s", tmp2->nome);
+            scanf("%s", tmp2->cognome);
+            scanf("%d", &tmp2->cellulare);
+            tmp->next = tmp2;
             tmp = tmp->next;
         }
-        contatto *tmp2 = (contatto*)malloc(sizeof(contatto));
-        scanf("%s", tmp2->nome);
-        scanf("%s", tmp2->cognome);
-        scanf("%d", &tmp2->cellulare);
-        tmp->next = tmp2;
-        tmp = tmp->next;
-        printContacts(rubrica);
-    }
 
-    if (strcmp(argv[1], "s") == 0){
-        save(rubrica, fp);
+        if (scelta == 's'){
+            save(rubrica, fp);
+        }
+        
+        //cancello contatto
+        if (scelta == 'e'){
+            char nome[50];
+            char cognome[50];
+            printf("inserisci nome e cognome del contatto che vuoi eliminare: ");
+            scanf("%s %s", nome, cognome);
+            delete(rubrica, nome, cognome);
+        }
     }
     return 0;
 }
