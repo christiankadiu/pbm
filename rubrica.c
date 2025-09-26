@@ -24,6 +24,13 @@ void printContacts(contatto* lista){
     }
 }
 
+void save(contatto* lista, FILE* f){
+    while(lista){
+        fprintf(f, "%s\t%s\t%d\n", lista->nome, lista->cognome, lista->cellulare);
+        lista = lista->next;
+    }
+}
+
 int main(int argc, char *argv[]){
     contatto *rubrica = NULL;
     contatto *tmp;
@@ -31,7 +38,7 @@ int main(int argc, char *argv[]){
     char cogno[50];
     int cellula;
 
-    FILE* fp = fopen("file.txt", "r");
+    FILE* fp = fopen("file.txt", "r+");
     if (fp == NULL){
         return 1;
     }
@@ -51,6 +58,7 @@ int main(int argc, char *argv[]){
         tmp->next = c;
         tmp = tmp->next;
     }
+    
     //visualizzare l'intera rubrica
     if (strcmp(argv[1], "v") == 0){
         printContacts(rubrica);
@@ -68,6 +76,10 @@ int main(int argc, char *argv[]){
         tmp->next = tmp2;
         tmp = tmp->next;
         printContacts(rubrica);
+    }
+
+    if (strcmp(argv[1], "s") == 0){
+        save(rubrica, fp);
     }
     return 0;
 }
